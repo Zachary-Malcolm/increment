@@ -8,10 +8,15 @@ export const PYODIDE_VERSION = '314.0.7';
 const PYODIDE_URL = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
 const DATA_DIR = '/home/pyodide/data';
 
-export type WorkerRequest = { id: number; code: string; setup: string; tests: string; data: string[] };
+export type WorkerRequest =
+  /** Load the libraries the code imports (pandas, numpy...) and its datasets. Not time-limited. */
+  | { type: 'prepare'; id: number; code: string; data: string[] }
+  | { type: 'run'; id: number; code: string; setup: string; tests: string };
+
 export type WorkerMessage =
   | { type: 'ready' }
   | { type: 'failed'; message: string }
+  | { type: 'prepared'; id: number; error?: string }
   | { type: 'result'; id: number; json: string };
 
 let py: PyodideAPI;
@@ -49,7 +54,16 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
   const req = e.data;
   queue = queue.then(async () => {
     await ready;
-    await ensureData(req.data);
+    if (req.type === 'prepare') {
+      try {
+        await py.loadPackagesFromImports(req.code);
+        await ensureData(req.data);
+        postMessage({ type: 'prepared', id: req.id } satisfies WorkerMessage);
+      } catch (err) {
+        postMessage({ type: 'prepared', id: req.id, error: String(err) } satisfies WorkerMessage);
+      }
+      return;
+    }
     const json = runSubmission(req.code, req.setup, req.tests);
     postMessage({ type: 'result', id: req.id, json } satisfies WorkerMessage);
   }).catch((err) => {

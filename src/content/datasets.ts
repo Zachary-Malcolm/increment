@@ -26,5 +26,30 @@ masses = [p["body_mass_g"] for p in penguins if p["species"] == "Adelie" and p["
 del penguins
 `;
 
+/** Loads penguins as a pandas DataFrame (missing values become NaN). */
+export const PENGUINS_DF_SETUP = `import pandas as pd
+penguins = pd.read_csv("data/penguins.csv")
+`;
+
+/**
+ * Gapminder: life expectancy, population and GDP per person for 142 countries, every 5 years 1952-2007.
+ * From the gapminder R package by Jennifer Bryan (CC0); data from Gapminder.org (CC BY 4.0).
+ * Columns: country, continent, year, life_exp, pop, gdp_per_cap
+ */
+export const GAPMINDER_FILE = 'gapminder.csv';
+export const GAPMINDER_DF_SETUP = `import pandas as pd
+gapminder = pd.read_csv("data/gapminder.csv")
+`;
+
+/**
+ * Oxford weather: monthly readings from the Radcliffe Observatory, Oxford, 1853-2025. Met Office historic
+ * station data, Open Government Licence v3.0. Estimated values are kept; missing values are blank.
+ * Columns: year, month, tmax_c, tmin_c, frost_days, rain_mm, sun_hours
+ */
+export const WEATHER_FILE = 'oxford_weather.csv';
+export const WEATHER_DF_SETUP = `import pandas as pd
+weather = pd.read_csv("data/oxford_weather.csv")
+`;
+
 export const PENGUINS_CREDIT =
   'Data: Palmer Penguins (Gorman, Williams & Fraser 2014; palmerpenguins package by Horst, Hill & Gorman), public domain (CC0).';

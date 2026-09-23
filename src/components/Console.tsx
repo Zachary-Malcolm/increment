@@ -33,6 +33,9 @@ export function Console({ result, running, hideErrorDetails = false }: { result:
             : <span className="empty">{result ? 'Nothing was printed.' : 'Run your code to see what it prints.'}</span>}
         </pre>
       </div>
+      {!running && result?.images?.map((png, i) => (
+        <img key={i} className="chart" src={`data:image/png;base64,${png}`} alt={`Chart ${i + 1} drawn by your code`} />
+      ))}
       {!running && result?.error && (
         <div className="alert alert-error" role="alert">
           <div>
@@ -55,6 +58,7 @@ export function Console({ result, running, hideErrorDetails = false }: { result:
 export function PythonStatusNote() {
   const status = usePythonStatus();
   if (status === 'loading') return <span className="py-status"><span className="spinner" /> Starting Python (first time takes a few seconds)…</span>;
+  if (status === 'libraries') return <span className="py-status"><span className="spinner" /> Loading data science libraries (first time only)…</span>;
   if (status === 'failed') return <span className="py-status" style={{ color: 'var(--red)' }}>Python couldn't load. Check your connection and reload.</span>;
   return null;
 }

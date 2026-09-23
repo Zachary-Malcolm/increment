@@ -3,14 +3,19 @@
 //
 // run_submission(code, setup, tests) runs the learner's code, then the exercise's hidden tests, and returns
 // a JSON string:
-//   { ok, output, error: {type, message, line, friendly} | null, failure: string | null }
+//   { ok, output, error: {type, message, line, friendly} | null, failure: string | null, images: [base64 PNG] }
 // Tests are plain Python using `assert condition, "message for the learner"`. They run in the learner's
 // namespace, plus `output` (everything printed), `lines` (output split into lines, blank ones dropped),
 // `source` (the learner's code as text) and `rerun(**values)` (runs the code again from scratch with the
 // given variables set first; returns its namespace, including its own `output` and `lines`).
+// `printed(fn, *args)` calls one of the learner's functions and returns the lines it printed.
+// Charts: tests can inspect matplotlib figures (e.g. plt.gca().get_title()) before they are captured as PNGs.
 
 export const HARNESS_PY = String.raw`
-import sys, io, json, traceback, builtins, contextlib
+import sys, os, io, json, base64, traceback, builtins, contextlib
+
+# Charts are drawn off-screen and sent back to the page as PNG images.
+os.environ["MPLBACKEND"] = "Agg"
 
 _MAX_OUTPUT = 20000
 
@@ -64,10 +69,42 @@ def _make_rerun(code):
         return ns
     return rerun
 
+def _prepare_libraries():
+    # Tidy defaults for libraries the code has loaded: wide tables print on one line, and no chart is
+    # left over from a previous run.
+    if "pandas" in sys.modules:
+        pd = sys.modules["pandas"]
+        pd.set_option("display.width", 120)
+        pd.set_option("display.max_columns", 20)
+    if "matplotlib.pyplot" in sys.modules:
+        sys.modules["matplotlib.pyplot"].close("all")
+
+def _capture_charts():
+    # PNGs of any figures the code drew, then close them.
+    if "matplotlib.pyplot" not in sys.modules:
+        return []
+    plt = sys.modules["matplotlib.pyplot"]
+    images = []
+    for num in plt.get_fignums():
+        buf = io.BytesIO()
+        plt.figure(num).savefig(buf, format="png", dpi=90, bbox_inches="tight")
+        images.append(base64.b64encode(buf.getvalue()).decode("ascii"))
+    plt.close("all")
+    return images
+
+def _printed(fn, *args, **kwargs):
+    # For tests: call fn and return the non-blank lines it printed.
+    buf = _Capped()
+    with contextlib.redirect_stdout(buf):
+        fn(*args, **kwargs)
+    return [l for l in buf.getvalue().splitlines() if l.strip()]
+
 def run_submission(code, setup="", tests=""):
     ns = {"__name__": "__main__", "input": _no_input}
+    _prepare_libraries()
     if setup:
         exec(compile(setup, "<setup>", "exec"), ns)
+    _prepare_libraries()
     buf = _Capped()
     error = None
     with contextlib.redirect_stdout(buf):
@@ -86,6 +123,7 @@ def run_submission(code, setup="", tests=""):
         ns["lines"] = [l for l in output.splitlines() if l.strip()]
         ns["source"] = code
         ns["rerun"] = _make_rerun(code)
+        ns["printed"] = _printed
         test_out = io.StringIO()
         with contextlib.redirect_stdout(test_out):
             try:
@@ -98,7 +136,8 @@ def run_submission(code, setup="", tests=""):
             except Exception as exc:
                 failure = f"Your answer didn't work with the checks ({type(exc).__name__}: {exc})."
     ok = error is None and failure is None
-    return json.dumps({"ok": ok, "output": output, "error": error, "failure": failure})
+    images = _capture_charts()
+    return json.dumps({"ok": ok, "output": output, "error": error, "failure": failure, "images": images})
 `;
 
 export interface PyError {
@@ -113,4 +152,6 @@ export interface RunResult {
   output: string;
   error: PyError | null;
   failure: string | null;
+  /** Charts the code drew, as base64 PNGs. */
+  images?: string[];
 }

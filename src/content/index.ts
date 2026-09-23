@@ -2,25 +2,32 @@ import type { ExerciseStep, Lesson, Module, PlannedModule } from './types';
 import { m01 } from './modules/m01-first-steps';
 import { m02 } from './modules/m02-decisions-loops';
 import { m03 } from './modules/m03-collections';
+import { m04 } from './modules/m04-functions';
+import { m05 } from './modules/m05-text';
+import { m06 } from './modules/m06-errors';
 import { PUZZLES } from './puzzles';
 
 export { PUZZLES };
-export const MODULES: Module[] = [m01, m02, m03];
+export const MODULES: Module[] = [m01, m02, m03, m04, m05, m06];
 
-/** The rest of the course, shown on the map as "coming soon". */
-export const PLANNED: PlannedModule[] = [
+/** The full course plan. Modules not written yet show on the map as "coming soon". */
+const ROADMAP: PlannedModule[] = [
   { number: 4, title: 'Functions', blurb: 'Package code into reusable tools.', topics: ['def and return', 'parameters and defaults', 'scope', 'docstrings'] },
-  { number: 5, title: 'Text in depth', blurb: 'Split, search and format text like a pro.', topics: ['split and join', 'searching text', 'formatting numbers', 'cleaning messy text'] },
-  { number: 6, title: 'Errors and debugging', blurb: 'Read tracebacks calmly and review code, including AI code.', topics: ['reading tracebacks', 'try and except', 'raising errors', 'a debugging method'] },
-  { number: 7, title: 'Comprehensions and iteration', blurb: 'Write loops in one clear line.', topics: ['list and dict comprehensions', 'enumerate and zip', 'sorting with key', 'lambda'] },
-  { number: 8, title: 'Files and the standard library', blurb: 'Read real files and use Python\'s built-in toolbox.', topics: ['reading and writing files', 'csv and json', 'imports', 'math, statistics, datetime, collections'] },
-  { number: 9, title: 'Classes and objects', blurb: 'Model the world with your own types.', topics: ['classes and __init__', 'methods', 'dataclasses', 'when to use a class'] },
-  { number: 10, title: 'NumPy', blurb: 'Fast maths on whole arrays of numbers.', topics: ['arrays', 'vectorised maths', 'boolean masks', 'aggregations'] },
-  { number: 11, title: 'pandas fundamentals', blurb: 'The data scientist\'s spreadsheet, in code.', topics: ['Series and DataFrames', 'selecting and filtering', 'sorting', 'new columns'] },
-  { number: 12, title: 'Analysing data with pandas', blurb: 'Answer real questions from real datasets.', topics: ['groupby', 'merging tables', 'missing data', 'dates and times'] },
-  { number: 13, title: 'Visualisation', blurb: 'Turn numbers into charts people understand.', topics: ['matplotlib basics', 'choosing the right chart', 'labelling', 'telling a story'] },
-  { number: 14, title: 'Capstone projects', blurb: 'Full analyses of UK open data, from question to insight.', topics: ['framing a question', 'cleaning', 'analysis', 'presenting findings'] },
+  { number: 5, title: 'Text in depth', blurb: 'Split, search, format and clean text, including regular expressions.', topics: ['slicing and searching', 'split and join', 'formatting numbers', 'cleaning messy text', 'regular expressions'] },
+  { number: 6, title: 'Errors and debugging', blurb: 'Read tracebacks calmly and review code, including AI code.', topics: ['reading tracebacks', 'try and except', 'raising errors', 'a debugging method', 'reviewing AI code'] },
+  { number: 7, title: 'Tuples, sets and comprehensions', blurb: 'More ways to hold data, and loops in one clear line.', topics: ['tuples', 'sets', 'list and dict comprehensions', 'enumerate, zip and sorting with key'] },
+  { number: 8, title: 'Files and the standard library', blurb: "Read real files and use Python's built-in toolbox.", topics: ['reading and writing files', 'csv and json', 'imports', 'math, statistics, datetime, collections'] },
+  { number: 9, title: 'Classes and objects', blurb: 'Model the world with your own types.', topics: ['classes and __init__', 'methods', 'dataclasses', 'inheritance'] },
+  { number: 10, title: 'NumPy', blurb: 'Fast maths on whole arrays of numbers.', topics: ['arrays', 'vectorised maths', 'boolean masks', 'aggregations', 'random simulation'] },
+  { number: 11, title: 'pandas fundamentals', blurb: "The data scientist's spreadsheet, in code.", topics: ['Series and DataFrames', 'reading CSVs', 'selecting and filtering', 'sorting', 'new columns'] },
+  { number: 12, title: 'Analysing data with pandas', blurb: 'Clean, group, combine and reshape real datasets.', topics: ['missing data', 'groupby', 'merging tables', 'pivot tables', 'dates and time series'] },
+  { number: 13, title: 'Visualisation', blurb: 'Turn numbers into charts people understand.', topics: ['matplotlib basics', 'choosing the right chart', 'plotting from pandas', 'honest charts'] },
+  { number: 14, title: 'Statistics for data science', blurb: 'Describe data, measure relationships and reason about uncertainty.', topics: ['centre and spread', 'distributions', 'correlation', 'sampling and confidence', 'comparing groups'] },
+  { number: 15, title: 'SQL for data analysis', blurb: 'Query databases, the language every data team speaks.', topics: ['SELECT and WHERE', 'ORDER BY', 'GROUP BY', 'JOIN', 'SQL with pandas'] },
+  { number: 16, title: 'Machine learning basics', blurb: 'Train, evaluate and trust your first models with scikit-learn.', topics: ['features and targets', 'train/test split', 'regression', 'classification', 'overfitting', 'clustering'] },
+  { number: 17, title: 'Capstone projects', blurb: 'Full analyses of real data, from question to insight.', topics: ['the data science workflow', 'UK climate', 'global development', 'an end-to-end model'] },
 ];
+export const PLANNED: PlannedModule[] = ROADMAP.filter((p) => !MODULES.some((m) => m.number === p.number));
 
 /** Every lesson in course order. */
 export const LESSONS: Lesson[] = MODULES.flatMap((m) => m.lessons);

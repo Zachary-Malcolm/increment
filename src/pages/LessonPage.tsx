@@ -57,8 +57,15 @@ function LessonPlayer({ lesson }: { lesson: Lesson }) {
   const [summary, setSummary] = useState<Summary | null>(null);
   const top = useRef<HTMLDivElement>(null);
 
+  // Start Python (and any libraries or datasets the lesson uses) while the learner reads.
   useEffect(() => {
-    if (lesson.steps.some((s) => s.kind === 'code' || (s.kind === 'predict' && s.data))) warmUpPython();
+    const runnable = lesson.steps.filter((s) => s.kind === 'code');
+    if (runnable.length) {
+      warmUpPython({
+        code: runnable.map((s) => [s.setup ?? '', s.solution, s.tests].join('\n')).join('\n'),
+        data: [...new Set(runnable.flatMap((s) => s.data ?? []))],
+      });
+    }
   }, [lesson]);
 
   useEffect(() => {

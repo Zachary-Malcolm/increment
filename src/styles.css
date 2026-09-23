@@ -412,3 +412,4 @@ a.lesson-row:hover { border-color: var(--border-strong); background: var(--surfa
 }
 .span-2 { grid-column: span 2; }
 @media (max-width: 860px) { .span-2 { grid-column: auto; } }
+.chart { display: block; max-width: 100%; margin-top: 12px; border-radius: 10px; background: #fff; border: 1px solid var(--border); }
