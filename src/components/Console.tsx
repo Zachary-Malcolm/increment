@@ -1,8 +1,28 @@
 import type { RunResult } from '../python/harness';
 import { usePythonStatus } from '../python/runner';
 
-/** What the learner's code printed, plus any error explained in plain English. */
-export function Console({ result, running }: { result: RunResult | null; running: boolean }) {
+// Problems with running at all (not with the learner's code), which are always shown in full.
+const SYSTEM_ERRORS = new Set(['Timeout', 'LoadError', 'Stopped']);
+
+/**
+ * What the learner's code printed, plus any error explained in plain English.
+ * `hideErrorDetails` (used by puzzles) replaces Python's error message with a generic one, because messages
+ * like "Maybe you meant '==' instead of '='?" would give the answer away.
+ */
+export function Console({ result, running, hideErrorDetails = false }: { result: RunResult | null; running: boolean; hideErrorDetails?: boolean }) {
+  if (hideErrorDetails && !running && result?.error && !SYSTEM_ERRORS.has(result.error.type)) {
+    return (
+      <>
+        <div className="console" aria-live="polite">
+          <div className="console-head">OUTPUT</div>
+          <pre>{result.output || <span className="empty">Nothing was printed.</span>}</pre>
+        </div>
+        <div className="alert alert-error" role="alert">
+          <span className="etype">Error</span>: the code still has a bug. Fix it and try again.
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <div className="console" aria-live="polite">

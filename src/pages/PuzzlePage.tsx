@@ -204,7 +204,7 @@ function PuzzlePlayer({ puzzle, daily }: { puzzle: Puzzle; daily?: DailyInfo }) 
             <PythonStatusNote />
           </div>
           {revealed && <div className="alert alert-info">Here's the fix. Compare it with the original, then press <strong>Check</strong>.</div>}
-          <Console result={result} running={running} />
+          <Console result={result} running={running} hideErrorDetails />
         </>
       )}
     </div>
