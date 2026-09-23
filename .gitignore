@@ -5,3 +5,4 @@ dist
 *.log
 verify.mjs
 snip.py
+dbg.ts

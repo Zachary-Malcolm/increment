@@ -85,9 +85,12 @@ def _capture_charts():
         return []
     plt = sys.modules["matplotlib.pyplot"]
     images = []
+    import warnings
     for num in plt.get_fignums():
         buf = io.BytesIO()
-        plt.figure(num).savefig(buf, format="png", dpi=90, bbox_inches="tight")
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            plt.figure(num).savefig(buf, format="png", dpi=90, bbox_inches="tight")
         images.append(base64.b64encode(buf.getvalue()).decode("ascii"))
     plt.close("all")
     return images
