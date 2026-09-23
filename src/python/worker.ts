@@ -21,6 +21,7 @@ export type WorkerMessage =
 
 let py: PyodideAPI;
 let runSubmission: (code: string, setup: string, tests: string) => string;
+let warmImports: (code: string) => void;
 const loadedData = new Set<string>();
 
 async function init() {
@@ -28,6 +29,7 @@ async function init() {
   py = await mod.loadPyodide({ indexURL: PYODIDE_URL });
   py.runPython(HARNESS_PY);
   runSubmission = py.globals.get('run_submission');
+  warmImports = py.globals.get('warm_imports');
   py.FS.mkdirTree(DATA_DIR);
 }
 
@@ -58,6 +60,7 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
       try {
         await py.loadPackagesFromImports(req.code, { messageCallback: () => {} });
         await ensureData(req.data);
+        warmImports(req.code);
         postMessage({ type: 'prepared', id: req.id } satisfies WorkerMessage);
       } catch (err) {
         postMessage({ type: 'prepared', id: req.id, error: String(err) } satisfies WorkerMessage);

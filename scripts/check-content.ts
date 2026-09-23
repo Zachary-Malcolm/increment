@@ -13,9 +13,19 @@ for (const name of readdirSync('public/data')) {
   py.FS.writeFile(`/home/pyodide/data/${name}`, readFileSync(`public/data/${name}`));
 }
 
+const warmImports = py.globals.get('warm_imports');
+
+/** How long the last run took. Like the app, library downloads and first imports happen untimed first. */
+let lastRunMs = 0;
+
 async function run(code: string, setup = '', tests = ''): Promise<RunResult> {
-  await py.loadPackagesFromImports([setup, code, tests].join('\n'), { messageCallback: () => {} });
-  return JSON.parse(runSubmission(code, setup, tests));
+  const all = [setup, code, tests].join('\n');
+  await py.loadPackagesFromImports(all, { messageCallback: () => {} });
+  warmImports(all);
+  const started = performance.now();
+  const result = JSON.parse(runSubmission(code, setup, tests));
+  lastRunMs = performance.now() - started;
+  return result;
 }
 
 function describe(r: RunResult): string {
@@ -25,6 +35,7 @@ function describe(r: RunResult): string {
 }
 
 const SLOW_MS = 5000;
+const timings: [string, number][] = [];
 const problems: string[] = [];
 const ids = new Set<string>();
 let checked = 0;
@@ -52,12 +63,11 @@ for (const mod of MODULES) {
       if (step.kind === 'code') checkData(where, [step.setup, step.solution, step.starter], step.data);
       if (step.kind === 'predict') checkData(where, [step.setup, step.code], step.data);
       if (step.kind === 'code') {
-        const started = performance.now();
         const good = await run(step.solution, step.setup, step.tests);
-        const ms = performance.now() - started;
         if (!good.ok) problems.push(`${where}: solution does not pass (${describe(good)})`);
         // The app stops runs after 15 s; leave plenty of headroom for slow phones.
-        if (ms > SLOW_MS) problems.push(`${where}: the solution plus tests took ${Math.round(ms)} ms (limit ${SLOW_MS} ms)`);
+        if (lastRunMs > SLOW_MS) problems.push(`${where}: the solution plus tests took ${Math.round(lastRunMs)} ms (limit ${SLOW_MS} ms)`);
+        timings.push([where, lastRunMs]);
         const starter = await run(step.starter, step.setup, step.tests);
         if (starter.ok) problems.push(`${where}: the starter code already passes the tests`);
         if (step.hints.length === 0) problems.push(`${where}: no hints`);
@@ -106,4 +116,5 @@ if (problems.length) {
   console.error(`✗ ${problems.length} problem(s) in ${checked} exercises:\n  ${problems.join('\n  ')}`);
   process.exit(1);
 }
-console.log(`✓ All ${checked} exercises and puzzles check out.`);
+const slowest = timings.sort((x, y) => y[1] - x[1]).slice(0, 3).map(([w, ms]) => `${w} ${Math.round(ms)} ms`);
+console.log(`✓ All ${checked} exercises and puzzles check out. Slowest: ${slowest.join(', ')}.`);

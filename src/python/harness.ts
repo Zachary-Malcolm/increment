@@ -95,6 +95,16 @@ def _capture_charts():
     plt.close("all")
     return images
 
+def warm_imports(code):
+    # Run the top-level import lines of some code ahead of time (untimed), so a slow first import such as
+    # scipy.stats doesn't count against the learner's time limit. Errors are ignored: the real run reports them.
+    for line in code.splitlines():
+        if line.startswith(("import ", "from ")):
+            try:
+                exec(line, {})
+            except BaseException:
+                pass
+
 def _printed(fn, *args, **kwargs):
     # For tests: call fn and return the non-blank lines it printed.
     buf = _Capped()
