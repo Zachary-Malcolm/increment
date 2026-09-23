@@ -8,10 +8,12 @@ import { m06 } from './modules/m06-errors';
 import { m07 } from './modules/m07-comprehensions';
 import { m08 } from './modules/m08-files-stdlib';
 import { m09 } from './modules/m09-classes';
+import { m10 } from './modules/m10-numpy';
+import { m11 } from './modules/m11-pandas';
 import { PUZZLES } from './puzzles';
 
 export { PUZZLES };
-export const MODULES: Module[] = [m01, m02, m03, m04, m05, m06, m07, m08, m09];
+export const MODULES: Module[] = [m01, m02, m03, m04, m05, m06, m07, m08, m09, m10, m11];
 
 /** The full course plan. Modules not written yet show on the map as "coming soon". */
 const ROADMAP: PlannedModule[] = [

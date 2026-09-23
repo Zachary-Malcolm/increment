@@ -56,7 +56,7 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
     await ready;
     if (req.type === 'prepare') {
       try {
-        await py.loadPackagesFromImports(req.code);
+        await py.loadPackagesFromImports(req.code, { messageCallback: () => {} });
         await ensureData(req.data);
         postMessage({ type: 'prepared', id: req.id } satisfies WorkerMessage);
       } catch (err) {

@@ -14,7 +14,7 @@ for (const name of readdirSync('public/data')) {
 }
 
 async function run(code: string, setup = '', tests = ''): Promise<RunResult> {
-  await py.loadPackagesFromImports([setup, code, tests].join('\n'));
+  await py.loadPackagesFromImports([setup, code, tests].join('\n'), { messageCallback: () => {} });
   return JSON.parse(runSubmission(code, setup, tests));
 }
 
