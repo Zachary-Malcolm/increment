@@ -7,7 +7,7 @@
 Increment teaches Python for data science one small step a day. It's built for people who have always meant to learn to code (often after a degree in a related subject) but find it daunting.
 
 - **Bite-sized lessons** with explanations, "what does this print?" questions and real coding exercises
-- **Real data from the start**: the Palmer Penguins dataset (344 penguins) appears from module 2
+- **Real data throughout**: Palmer Penguins, Gapminder (142 countries, 1952-2007) and 173 years of Met Office weather records for Oxford
 - **Real Python in the browser**, powered by [Pyodide](https://pyodide.org): nothing to install, nothing runs on a server
 - **Bug-hunt puzzles**, chess.com style: AI-written code with one bug. Find the line, then fix it. A daily puzzle, with difficulty rising from Monday to Sunday, plus rated puzzles with an Elo rating
 - **Streaks** with earnable streak freezes, **XP and levels**, and a **GitHub-style activity grid**
@@ -26,15 +26,33 @@ CI runs it on every push, and the deploy won't publish if it fails.
 
 Tests are plain Python `assert`s. Beyond checking the result, they can re-run the learner's code with different inputs (`rerun(mass_g=5000)`), so hard-coding the expected answer doesn't pass.
 
-## Course so far
+## The course
 
-| Module | Lessons |
-|---|---|
-| 1. First steps | Hello Python · Numbers and maths · Variables · Working with text · Types and conversion |
-| 2. Decisions and loops | True or false · if/elif/else · for loops · while loops · Loop patterns with real data |
-| 3. Lists and dictionaries | Lists · Slicing and list tools · Dictionaries · Records: real data · Project: penguin census |
+17 modules, 87 lessons, 286 checked exercises and puzzles:
 
-Plus 28 bug-hunt puzzles rated 400 to 1800. Modules 4 to 14 (functions through pandas, visualisation and capstone projects) are on the roadmap in `src/content/index.ts`.
+| # | Module | Covers |
+|---|---|---|
+| 1 | First steps | print, numbers, variables, strings, types |
+| 2 | Decisions and loops | booleans, if/elif/else, for and while loops, loop patterns on real data |
+| 3 | Lists and dictionaries | lists, slicing, dictionaries, records, a penguin census project |
+| 4 | Functions | def/return, defaults and keywords, scope, docstrings and type hints, a statistics toolkit |
+| 5 | Text in depth | slicing and searching, split/join, number formatting, cleaning text, regular expressions |
+| 6 | Errors and debugging | tracebacks, try/except, raising errors, a debugging method, reviewing AI code |
+| 7 | Tuples, sets and comprehensions | tuples, sets, list/dict/set comprehensions, enumerate, zip, sorting with key, lambda |
+| 8 | Files and the standard library | reading/writing files, csv, json, imports, statistics, random, datetime, collections |
+| 9 | Classes and objects | classes, methods, dunder methods, dataclasses, inheritance |
+| 10 | NumPy | arrays, masks, aggregations, 2D arrays and broadcasting, simulation |
+| 11 | pandas fundamentals | Series/DataFrames, read_csv, inspecting, loc/iloc, filtering, sorting, new columns |
+| 12 | Analysing data with pandas | missing data, groupby, merge/concat, pivot tables, dates and time series, a Gapminder project |
+| 13 | Visualisation | matplotlib, bar/hist/scatter/line, plotting from pandas, subplots, honest charts |
+| 14 | Statistics | centre and spread, outliers, z-scores, correlation (and Simpson's paradox), bootstrap confidence intervals, permutation tests and t-tests |
+| 15 | SQL | SELECT, WHERE, ORDER BY, GROUP BY/HAVING, joins, parameterised queries, subqueries (SQLite) |
+| 16 | Machine learning | features and targets, train/test split, regression metrics, classification, overfitting, cross-validation, pipelines, k-means |
+| 17 | Capstone projects | the workflow and data ethics, Oxford climate, wealth and health, an end-to-end classifier, communicating findings |
+
+Plus 28 bug-hunt puzzles rated 400 to 1800. More puzzles, especially expert ones, are next.
+
+Libraries (pandas, NumPy, matplotlib, scikit-learn, SciPy, sqlite3) load automatically the first time a lesson imports them, in a separate step from the learner's time limit. Charts drawn with matplotlib appear as images, and tests check them by inspecting the figure (titles, labels, bar heights, point counts).
 
 ## Running it
 
@@ -63,7 +81,7 @@ Without these steps the app works fully, saving progress in the browser.
 |---|---|
 | `src/content/` | All course content: modules, lessons, puzzles, datasets. `types.ts` documents the format |
 | `src/python/harness.ts` | The Python that runs learner code, captures output, explains errors in plain English and runs the hidden tests |
-| `src/python/worker.ts`, `runner.ts` | Runs Pyodide in a web worker; a run that takes over 8 seconds (e.g. an endless loop) is stopped by restarting the worker |
+| `src/python/worker.ts`, `runner.ts` | Runs Pyodide in a web worker; a run that takes over 15 seconds (e.g. an endless loop) is stopped by restarting the worker |
 | `src/lib/progress.ts` | Progress data plus pure functions for XP, levels, streaks, freezes and merging devices |
 | `src/lib/srs.ts` | Spaced repetition (FSRS via `ts-fsrs`) |
 | `src/lib/puzzles.ts` | Elo rating and the daily puzzle schedule |
@@ -72,4 +90,6 @@ Without these steps the app works fully, saving progress in the browser.
 
 ## Data
 
-Palmer Penguins: Gorman KB, Williams TD, Fraser WR (2014), via the [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/) package by Horst, Hill & Gorman. Public domain (CC0).
+- **Palmer Penguins**: Gorman KB, Williams TD, Fraser WR (2014), via the [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/) package by Horst, Hill & Gorman. Public domain (CC0).
+- **Gapminder**: from the [gapminder](https://github.com/jennybc/gapminder) package by Jennifer Bryan (CC0); data from [Gapminder.org](https://www.gapminder.org/data/) (CC BY 4.0).
+- **Oxford weather**: [Met Office historic station data](https://www.metoffice.gov.uk/research/climate/maps-and-data/historic-station-data), Radcliffe Observatory, Oxford, 1853-2025. Contains public sector information licensed under the Open Government Licence v3.0.

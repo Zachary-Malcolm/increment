@@ -61,11 +61,25 @@ The preview server is configured in `C:\CLAUDE PROJECTS\.claude\launch.json` as 
 
 ## Next steps (agreed priority)
 
-1. **Supabase setup** (Zach does the account creation; see README): then test sign-up, sync, delete.
-2. **More content**: module 4 (Functions) next, then 5-9 (core Python), then NumPy/pandas (10-12; load
-   `pandas` via `pyodide.loadPackage` only for those lessons), visualisation (13), capstones on UK open data (14).
-   Keep adding puzzles, especially 1500+ (Sunday "Expert" tier only has 3).
-3. **Code-split** the bundle (885 kB): lazy-load lesson/review/puzzle pages (CodeMirror) and Supabase.
+The core curriculum is complete (17 modules, 87 lessons, finished 2026-09-23). Zach asked for puzzles next.
+
+1. **More puzzles**, across all topics now taught (pandas, SQL, ML bugs too), especially 1500+ (the Sunday
+   "Expert" tier only has 3). Same rules: buggy fails, fixed passes, only bugLines differ.
+2. **Supabase setup** (Zach does the account creation; see README): then test sign-up, sync, delete.
+3. **Code-split** the bundle (~1.1 MB, 357 kB gzip): lazy-load lesson/review/puzzle pages (CodeMirror),
+   Supabase, and the content modules.
 4. Onboarding polish: daily goal setting, reminder emails/notifications, share cards as images.
-5. Monetisation (later): free core path + paid tier (all modules past 5, unlimited rated puzzles, stats).
+5. Monetisation (later): free core path + paid tier (e.g. modules 10+, unlimited rated puzzles, stats).
    Use Stripe; keep the daily puzzle free (it's the growth loop).
+
+## Content notes
+
+- Datasets: penguins, gapminder, oxford_weather (see `src/content/datasets.ts` for loaders and licences).
+  Setup snippets there (e.g. `PENGUINS_DF_SETUP`) define the variables lessons rely on.
+- Files a lesson creates (notes.txt, survey.json) live in the working folder, never `data/` (the browser
+  would try to download anything under `data/`).
+- The checker fails any solution slower than 5 s; the app's run limit is 15 s. Libraries load in a separate,
+  untimed "prepare" step (`runner.ts`).
+- Test helpers: `output`, `lines`, `source`, `rerun(**vars)`, `printed(fn, *args)`; charts via
+  `plt.gcf().axes`. Compare floats with a tolerance (NumPy and Python round halves differently).
+- Every number quoted in lesson prose (not just in tests) should be checked against the data.

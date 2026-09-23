@@ -16,7 +16,8 @@ export interface RunRequest {
   data?: string[];
 }
 
-const TIME_LIMIT_MS = 8000;
+// Long enough for model training on slow phones; still stops endless loops.
+const TIME_LIMIT_MS = 15000;
 
 let worker: Worker | null = null;
 let status: PythonStatus = 'idle';

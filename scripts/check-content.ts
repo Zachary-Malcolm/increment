@@ -24,6 +24,7 @@ function describe(r: RunResult): string {
   return 'passed';
 }
 
+const SLOW_MS = 5000;
 const problems: string[] = [];
 const ids = new Set<string>();
 let checked = 0;
@@ -51,8 +52,12 @@ for (const mod of MODULES) {
       if (step.kind === 'code') checkData(where, [step.setup, step.solution, step.starter], step.data);
       if (step.kind === 'predict') checkData(where, [step.setup, step.code], step.data);
       if (step.kind === 'code') {
+        const started = performance.now();
         const good = await run(step.solution, step.setup, step.tests);
+        const ms = performance.now() - started;
         if (!good.ok) problems.push(`${where}: solution does not pass (${describe(good)})`);
+        // The app stops runs after 15 s; leave plenty of headroom for slow phones.
+        if (ms > SLOW_MS) problems.push(`${where}: the solution plus tests took ${Math.round(ms)} ms (limit ${SLOW_MS} ms)`);
         const starter = await run(step.starter, step.setup, step.tests);
         if (starter.ok) problems.push(`${where}: the starter code already passes the tests`);
         if (step.hints.length === 0) problems.push(`${where}: no hints`);

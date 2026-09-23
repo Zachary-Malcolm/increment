@@ -288,9 +288,9 @@ assert abs((low + high) / 2 - mean) < 15, "The interval should be centred close 
         {
           kind: 'choice',
           id: 'm14-l4-interpret',
-          question: 'A 95% confidence interval for the mean Adelie mass is 3630 g to 3775 g. Which interpretation is best?',
+          question: 'A 95% confidence interval for the mean Adelie mass is 3628 g to 3774 g. Which interpretation is best?',
           options: [
-            '95% of Adelie penguins weigh between 3630 g and 3775 g',
+            '95% of Adelie penguins weigh between 3628 g and 3774 g',
             'Our method produces intervals that capture the true mean about 95% of the time, so the true mean plausibly lies in this range',
             'The mean is exactly 3700 g',
             'There\'s a 5% chance the data is wrong',
@@ -324,7 +324,7 @@ If the island made **no** difference, the island labels would be interchangeable
 observed = a.mean() - b.mean()
 combined = np.concatenate([a, b])
 diffs = []
-for _ in range(5000):
+for _ in range(2000):
     shuffled = rng.permutation(combined)
     diffs.append(shuffled[:len(a)].mean() - shuffled[len(a):].mean())
 p = np.mean(np.abs(diffs) >= abs(observed))
@@ -342,17 +342,17 @@ p = np.mean(np.abs(diffs) >= abs(observed))
         {
           kind: 'code',
           id: 'm14-l5-perm',
-          prompt: 'Compare the mass of Adelie penguins on **Dream** (`a`) and **Torgersen** (`b`) with a permutation test: `rng = np.random.default_rng(1)`, **5000** shuffles. Create `observed` (the difference in means, a minus b) and `p_value` (two-sided, as in the lesson).',
+          prompt: 'Compare the mass of Adelie penguins on **Dream** (`a`) and **Torgersen** (`b`) with a permutation test: `rng = np.random.default_rng(1)`, **2000** shuffles. Create `observed` (the difference in means, a minus b) and `p_value` (two-sided, as in the lesson).',
           setup: `${ADELIE_DF_SETUP}a = adelie[adelie["island"] == "Dream"]["body_mass_g"].to_numpy()\nb = adelie[adelie["island"] == "Torgersen"]["body_mass_g"].to_numpy()\n`,
           data: [PENGUINS_FILE],
           starter: 'import numpy as np\n# a: Dream Adelie masses, b: Torgersen Adelie masses (NumPy arrays)\n',
-          solution: 'import numpy as np\nrng = np.random.default_rng(1)\nobserved = a.mean() - b.mean()\ncombined = np.concatenate([a, b])\ndiffs = []\nfor _ in range(5000):\n    shuffled = rng.permutation(combined)\n    diffs.append(shuffled[:len(a)].mean() - shuffled[len(a):].mean())\np_value = np.mean(np.abs(diffs) >= abs(observed))\n',
+          solution: 'import numpy as np\nrng = np.random.default_rng(1)\nobserved = a.mean() - b.mean()\ncombined = np.concatenate([a, b])\ndiffs = []\nfor _ in range(2000):\n    shuffled = rng.permutation(combined)\n    diffs.append(shuffled[:len(a)].mean() - shuffled[len(a):].mean())\np_value = np.mean(np.abs(diffs) >= abs(observed))\n',
           tests: `assert abs(observed - (a.mean() - b.mean())) < 1e-9, "observed should be a.mean() - b.mean()."
 import numpy as _np
 _rng = _np.random.default_rng(1)
 _c = _np.concatenate([a, b])
 _d = []
-for _ in range(5000):
+for _ in range(2000):
     _s = _rng.permutation(_c)
     _d.append(_s[:len(a)].mean() - _s[len(a):].mean())
 _p = _np.mean(_np.abs(_d) >= abs(a.mean() - b.mean()))

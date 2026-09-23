@@ -316,7 +316,7 @@ print(years, colony)
 5 1600
 ~~~
 
-Something inside the loop **must** change the condition, or it runs forever. (If that happens here, Increment stops your code after a few seconds.)
+Something inside the loop **must** change the condition, or it runs forever. (If that happens here, Increment stops your code after 15 seconds.)
 `,
         },
         {

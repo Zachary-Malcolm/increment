@@ -15,7 +15,7 @@ export function Home() {
 }
 
 function Welcome({ signedIn }: { signedIn: boolean }) {
-  const lessonCount = MODULES.reduce((n, m) => n + m.lessons.length, 0);
+  const lessonCount = LESSONS.length;
   return (
     <>
       <section className="hero">
@@ -29,7 +29,7 @@ function Welcome({ signedIn }: { signedIn: boolean }) {
           <Link className="btn btn-primary btn-lg" to={`/lesson/${LESSONS[0].id}`}>Start your first lesson</Link>
           {supabase && !signedIn && <Link className="btn btn-lg" to="/account">I have an account</Link>}
         </div>
-        <p className="faint" style={{ fontSize: 14, marginTop: 16 }}>No sign-up needed to start. {lessonCount} lessons and counting.</p>
+        <p className="faint" style={{ fontSize: 14, marginTop: 16 }}>No sign-up needed to start. {MODULES.length} modules, {lessonCount} lessons, from your first line of code to machine learning.</p>
       </section>
       <section className="grid grid-3">
         <div className="card feature">
@@ -122,10 +122,10 @@ function Dashboard() {
         <div className="card continue-card">
           <div>
             <div className="card-title">Course progress</div>
-            <h2>You've finished every lesson so far 🎉</h2>
-            <div className="muted">New modules are on the way. Keep your streak going with reviews and puzzles.</div>
+            <h2>You've completed the whole course 🎉</h2>
+            <div className="muted">Keep it fresh with your reviews and the daily puzzle, then start a project of your own.</div>
           </div>
-          <Link className="btn btn-lg" to="/learn">See the roadmap</Link>
+          <Link className="btn btn-lg" to="/learn">Revisit a module</Link>
         </div>
       )}
 
