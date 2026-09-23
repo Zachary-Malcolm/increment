@@ -2,6 +2,8 @@
 
 **Small enough to remember. Hard enough to grow.**
 
+**Try it: https://zachary-malcolm.github.io/increment/**
+
 Increment teaches Python for data science one small step a day. It's built for people who have always meant to learn to code (often after a degree in a related subject) but find it daunting.
 
 - **Bite-sized lessons** with explanations, "what does this print?" questions and real coding exercises

@@ -59,6 +59,8 @@ The preview server is configured in `C:\CLAUDE PROJECTS\.claude\launch.json` as 
 
 ## Next steps (agreed priority)
 
+- Live: https://zachary-malcolm.github.io/increment/ (Pages via Actions, enabled 2026-09-23) · Repo: https://github.com/Zachary-Malcolm/increment
+
 1. **Supabase setup** (Zach does the account creation; see README): then test sign-up, sync, delete.
 2. **More content**: module 4 (Functions) next, then 5-9 (core Python), then NumPy/pandas (10-12; load
    `pandas` via `pyodide.loadPackage` only for those lessons), visualisation (13), capstones on UK open data (14).
