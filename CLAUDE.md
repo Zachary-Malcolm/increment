@@ -4,6 +4,8 @@ A web app that teaches Python for data science in small daily steps (think DataC
 puzzles). Vite + React + TypeScript, Python runs in the browser via Pyodide, optional accounts via Supabase.
 Motto: **"Small enough to remember. Hard enough to grow."** The name comes from `i += 1`.
 
+- Live: https://zachary-malcolm.github.io/increment/ (Pages via Actions, enabled 2026-09-23) · Repo: https://github.com/Zachary-Malcolm/increment
+  Pushing to `main` deploys (the deploy runs the tests and content check first).
 - **README.md is the full reference** (features, file map, Supabase setup). Read it first.
 - Owner: Zach (GitHub `Zachary-Malcolm`). Aim: a real product that can later be monetised (subscription),
   and a portfolio piece. Target learner: people who find coding daunting, even after a related degree.
@@ -58,8 +60,6 @@ The preview server is configured in `C:\CLAUDE PROJECTS\.claude\launch.json` as 
   screenshots. The CodeMirror editor can't be typed into by script; use the Run/Check buttons or real keys.
 
 ## Next steps (agreed priority)
-
-- Live: https://zachary-malcolm.github.io/increment/ (Pages via Actions, enabled 2026-09-23) · Repo: https://github.com/Zachary-Malcolm/increment
 
 1. **Supabase setup** (Zach does the account creation; see README): then test sign-up, sync, delete.
 2. **More content**: module 4 (Functions) next, then 5-9 (core Python), then NumPy/pandas (10-12; load
